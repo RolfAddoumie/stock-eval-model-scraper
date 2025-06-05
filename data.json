@@ -1,0 +1,39 @@
+{
+    "symbol": "msft",
+    "stock_price": 467.68,
+    "market_cap": 3447.73,
+    "cagr": {
+        "years": 4,
+        "value_percent": 2.44,
+        "free_cash_flow_points": [
+            [
+                2024,
+                74071.0
+            ],
+            [
+                2023,
+                59475.0
+            ],
+            [
+                2022,
+                65149.0
+            ],
+            [
+                2021,
+                56118.0
+            ]
+        ]
+    },
+    "latest_cash_on_hand": [
+        [
+            "2025-03-31",
+            79618.0
+        ]
+    ],
+    "latest_total_liabilities": [
+        [
+            "2025-03-31",
+            240733.0
+        ]
+    ]
+}
