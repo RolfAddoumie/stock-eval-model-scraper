@@ -2,10 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import pandas as pd
+from datetime import date
 
 headers = {"User-Agent": "Mozilla/5.0"}
-api_key = "14d9e55888524b43a3da05c004f6946f"
+
 # Stock Price
+today = date.today()
 symbol = input("Input the ticker of the stock: ")
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/stock-price-history"
 
@@ -152,6 +154,6 @@ columns_order = list(general_info.keys()) + ["Year", "Free Cash Flow"]
 fcf_df = fcf_df[columns_order]
 
 # Save to CSV
-fcf_df.to_csv(f"{symbol}_stock_summary.csv", index=False)
+fcf_df.to_csv(f"{symbol}_stock_summary_{today}.csv", index=False)
 
 print(f"Merged CSV '{symbol}_stock_summary.csv' created with general info only in the first row.")
