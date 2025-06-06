@@ -7,8 +7,7 @@ headers = {"User-Agent": "Mozilla/5.0"}
 api_key = "14d9e55888524b43a3da05c004f6946f"
 # Stock Price
 symbol = input("Input the ticker of the stock: ")
-name = input("Input the stock name: ")
-url = f"https://www.macrotrends.net/stocks/charts/{symbol}/{name}/stock-price-history"
+url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/stock-price-history"
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, "html.parser")
@@ -19,7 +18,7 @@ stock = sub.find_all("strong")[0].text.strip()
 
 
 # Market Cap
-url = f"https://www.macrotrends.net/stocks/charts/{symbol}/{name}/market-cap"
+url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/market-cap"
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, "html.parser")
@@ -28,20 +27,8 @@ sub = soup.find("span", {"style": "color:#444; line-height: 1.8;"})
 latest_market_cap = sub.find_all("strong")[0].text.strip()
 latest_market_cap = latest_market_cap.replace('$', '').replace('B', '').strip()
 
-# CAGR input
-while True:
-    years_input = input("Input the time period that you would like to use in the CAGR calculation (min 4 yrs): ")
-    try:
-        years = int(years_input)
-        if years >= 4:
-            break
-        else:
-            print("Please enter a number greater than or equal to 4.")
-    except ValueError:
-        print("Invalid input. Please enter an integer number.")
-
 # Free Cash Flow (CAGR Calculation)
-url = f"https://www.macrotrends.net/stocks/charts/{symbol}/{name}/free-cash-flow"
+url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/free-cash-flow"
 
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, "html.parser")
@@ -50,7 +37,7 @@ table = soup.find("table", {"class": "historical_data_table table"})
 rows = table.find_all("tr")
 data_rows = [row for row in rows if len(row.find_all("td")) >= 2]
 
-years_count = data_rows[:years]
+years_count = data_rows[:11]
 
 start_value = (float(years_count[-1].find_all("td")[1].text.replace(",", "")) + float(years_count[-2].find_all("td")[1].text.replace(",", ""))) / 2
 end_value = (float(years_count[0].find_all("td")[1].text.replace(",", "")) + float(years_count[1].find_all("td")[1].text.replace(",", ""))) / 2
@@ -65,7 +52,7 @@ for row in years_count:
     free_cash_flow_points.append(cols)
 
 # Cash on Hand
-url = f"https://www.macrotrends.net/stocks/charts/{symbol}/{name}/cash-on-hand"
+url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/cash-on-hand"
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, "html.parser")
 
@@ -80,7 +67,7 @@ if len(data_rows) > 0:
     latest_cash_on_hand = [col.text.strip() for col in data_rows[0].find_all("td")]
 
 # Total Liabilities
-url = f"https://www.macrotrends.net/stocks/charts/{symbol}/{name}/total-liabilities"
+url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/total-liabilities"
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, "html.parser")
 
