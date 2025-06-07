@@ -1,63 +1,12 @@
 {
-    "symbol": "goos",
-    "stock_price": 11.18,
-    "market_cap": 1.13,
+    "symbol": "GOOS",
+    "stock_price": 11.38,
+    "market_cap": null,
     "cagr": {
-        "years": 10,
-        "value_percent": 68.73,
-        "free_cash_flow_points": [
-            [
-                2025,
-                197.43
-            ],
-            [
-                2024,
-                81.27
-            ],
-            [
-                2023,
-                53.79
-            ],
-            [
-                2022,
-                93.42
-            ],
-            [
-                2021,
-                202.21
-            ],
-            [
-                2020,
-                12.93
-            ],
-            [
-                2019,
-                32.84
-            ],
-            [
-                2018,
-                78.1
-            ],
-            [
-                2017,
-                17.93
-            ],
-            [
-                2016,
-                -16.44
-            ]
-        ]
+        "years": 0,
+        "value_percent": 0,
+        "free_cash_flow_points": []
     },
-    "latest_cash_on_hand": [
-        [
-            "2025-03-31",
-            240.0
-        ]
-    ],
-    "latest_total_liabilities": [
-        [
-            "2025-03-31",
-            762.0
-        ]
-    ]
+    "latest_cash_on_hand": [],
+    "latest_total_liabilities": []
 }

@@ -4,16 +4,18 @@ import json
 import pandas as pd
 from datetime import date
 
-headers = {"User-Agent": "Mozilla/5.0"}
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+}
 
 # Stock Price
 today = date.today()
 symbol = input("Input the ticker of the stock: ")
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/stock-price-history"
 
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.content, "html.parser")
 
+response = requests.get(url, headers=headers, timeout=10)
+soup = BeautifulSoup(response.content, "html.parser")
 
 sub = soup.find("span", {"style": "color:#444; line-height: 1.8;"})
 stock = sub.find_all("strong")[0].text.strip()
@@ -22,7 +24,7 @@ stock = sub.find_all("strong")[0].text.strip()
 # Market Cap
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/market-cap"
 
-response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers, timeout=10)
 soup = BeautifulSoup(response.content, "html.parser")
 
 sub = soup.find("span", {"style": "color:#444; line-height: 1.8;"})
@@ -32,7 +34,7 @@ latest_market_cap = latest_market_cap.replace('$', '').replace('B', '').strip()
 # Free Cash Flow (CAGR Calculation)
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/free-cash-flow"
 
-response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers, timeout=10)
 soup = BeautifulSoup(response.content, "html.parser")
 
 table = soup.find("table", {"class": "historical_data_table table"})
@@ -43,9 +45,13 @@ years_count = data_rows[:11]
 
 start_value = (float(years_count[-1].find_all("td")[1].text.replace(",", "")) + float(years_count[-2].find_all("td")[1].text.replace(",", ""))) / 2
 end_value = (float(years_count[0].find_all("td")[1].text.replace(",", "")) + float(years_count[1].find_all("td")[1].text.replace(",", ""))) / 2
-years_actual = len(years_count)
+years_actual = len(years_count) - 1
+print(end_value, start_value)
+if end_value < 0 or start_value < 0:
+    pass
+else:
+    cagr = ((pow(end_value / start_value, 1/years_actual) - 1) * 100)
 
-cagr = ((pow(end_value / start_value, 1/years_actual) - 1) * 100)
 cagr_rounded = round(cagr, 2)
 
 free_cash_flow_points = []
@@ -55,7 +61,8 @@ for row in years_count:
 
 # Cash on Hand
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/cash-on-hand"
-response = requests.get(url, headers=headers)
+
+response = requests.get(url, headers=headers, timeout=10)
 soup = BeautifulSoup(response.content, "html.parser")
 
 table = soup.find_all("div", {"class": "col-xs-6"})
@@ -70,7 +77,8 @@ if len(data_rows) > 0:
 
 # Total Liabilities
 url = f"https://www.macrotrends.net/stocks/charts/{symbol}/-/total-liabilities"
-response = requests.get(url, headers=headers)
+
+response = requests.get(url, headers=headers, timeout=10)
 soup = BeautifulSoup(response.content, "html.parser")
 
 table = soup.find_all("div", {"class": "col-xs-6"})
@@ -110,7 +118,7 @@ all_data = {
     "market_cap": float(latest_market_cap),
     "cagr": {
         "years": years_actual,
-        "value_percent": cagr_rounded,
+        "value_percent": 0,
         "free_cash_flow_points": cleaned_fcf
     },
     "latest_cash_on_hand": cleaned_coh,
@@ -128,6 +136,7 @@ with open("data.json", "r") as f:
 
 # Extract general info
 general_info = {
+    "date": today,
     "symbol": data["symbol"],
     "Stock Price": data["stock_price"],
     "Market Cap (in billions)": data["market_cap"],
@@ -156,4 +165,4 @@ fcf_df = fcf_df[columns_order]
 # Save to CSV
 fcf_df.to_csv(f"{symbol}_stock_summary_{today}.csv", index=False)
 
-print(f"Merged CSV '{symbol}_stock_summary.csv' created with general info only in the first row.")
+print(f"Merged CSV '{symbol}_stock_summary_{today}.csv' created with general info only in the first row.")
