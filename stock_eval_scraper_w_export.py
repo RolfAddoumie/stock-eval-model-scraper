@@ -45,12 +45,10 @@ years_count = data_rows[:11]
 
 start_value = (float(years_count[-1].find_all("td")[1].text.replace(",", "")) + float(years_count[-2].find_all("td")[1].text.replace(",", ""))) / 2
 end_value = (float(years_count[0].find_all("td")[1].text.replace(",", "")) + float(years_count[1].find_all("td")[1].text.replace(",", ""))) / 2
-years_actual = len(years_count) - 1
+years_actual = len(years_count)
 print(end_value, start_value)
-if end_value < 0 or start_value < 0:
-    pass
-else:
-    cagr = ((pow(end_value / start_value, 1/years_actual) - 1) * 100)
+
+cagr = ((pow(end_value / start_value, 1/years_actual) - 1) * 100)
 
 cagr_rounded = round(cagr, 2)
 
